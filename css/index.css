@@ -1,0 +1,38 @@
+#table-test {
+    display: block;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.line {
+    margin: 3em 0;
+}
+
+.line .src.form-control {
+    width: 47.5%;
+}
+
+.line .dest.form-control {
+    width: 47.5%;
+}
+
+.line .control-buttons {
+    display: inline-block;
+    width: 5%
+}
+
+@media only screen and (max-width: 768px){
+    .line .src.form-control {
+        width: 100%;
+    }
+    
+    .line .dest.form-control {
+        width: 100%;
+    }
+    
+    .line .control-buttons {
+        width: 100%
+    }
+}
