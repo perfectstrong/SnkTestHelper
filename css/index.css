@@ -33,6 +33,16 @@ textarea {
     flex-wrap: wrap;
 }
 
+#test-saver .panel-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+    align-items: baseline;
+    justify-items: stretch;
+
+}
+
 @media (min-width: 768px) {
     .nav-justified li.nav-item {
         display: inline-block;
@@ -62,5 +72,9 @@ textarea {
         width: 100%;
         flex-direction: row;
         justify-content: center;
+    }
+
+    #test-saver #options {
+        grid-template-columns: 1fr;
     }
 }
