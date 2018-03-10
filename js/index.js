@@ -71,9 +71,10 @@ class TableTest {
         this.data = [];
         // Other metadata
         this.metadata = {
-            title: "", // Title of chosen test
+            title: "", // Title of chosen text
             candidate: "", // SNK Nickname
-            attempt: 1, // Number of attempts candidate has tried
+            attempt: 0, // Number of attempts candidate has tried
+            _testtittle: "", // Title of this test, calculated by rule
         }
         this.counter = 0;
     }
@@ -158,6 +159,52 @@ class TableTest {
     }
 
     /**
+     * Set the name of candidate
+     * 
+     * @param {String} name 
+     * @memberof TableTest
+     */
+    setCandidate(name) {
+        this.metadata.candidate = name.replace("_", " ");
+    }
+
+    /**
+     * Set the name of chosen test
+     * 
+     * @param {String} name 
+     * @memberof TableTest
+     */
+    setTitle(name) {
+        this.metadata.title = name.replace("_", " ");
+    }
+
+    /**
+     * Set the order of this test
+     * 
+     * @param {Number} num 
+     * @memberof TableTest
+     */
+    setAttempt(num) {
+        this.metadata.attempt = (num > 0 ? num : 1);
+    }
+
+    /**
+     * 
+     * 
+     * @returns {String} the title of test according to rule
+     * @memberof TableTest
+     */
+    getTestTitle() {
+        if (!this.metadata._testtittle) {
+            this.metadata._testtittle =
+                "SNKTEST_" + this.metadata.candidate
+                + "_" + this.metadata.title
+                + "_" + this.metadata.attempt;
+        }
+        return this.metadata._testtittle;
+    }
+
+    /**
      * Initialize data from input text
      * 
      * @param {String} srctext including the title
@@ -191,6 +238,11 @@ class TableTest {
         div.id = "table-test";
 
         // Inner HTML
+        // Test title
+        let title = document.createElement("h3");
+        title.innerHTML = this.getTestTitle();
+        div.appendChild(title);
+        // Test content
         this.data.forEach(line => div.appendChild(line.getHTML()));
 
         return div;
@@ -256,19 +308,32 @@ function buildControlButtons() {
 }
 
 let table = new TableTest(); // Data behind the table of test
+let $maker = $("#test-maker"),
+    $content = $("#test-content"),
+    $saver = $("#test-saver"),
+    $loader = $("#test-loader");
 
 /* Test maker */
-$("#test-maker").submit(function (ev) {
+$maker.find("form#input-text").submit(function (ev) {
     ev.preventDefault();
-    let $this = $(this),
-        inputtext = $this.find("#input-text");
+    let $this = $(this);
     // Flush old content
-    $this.find("#table-test").remove();
+    $content.find(".panel-body").empty();
+    // Get metatdata
+    table.setTitle($this.find("input#title").val());
+    table.setCandidate($this.find("input#nickname").val());
+    table.setAttempt($this.find("input#attempt").val());
     // Get the input text from form
     let srctext = "";
-    srctext += inputtext.find("input#title").val() + "\n";
-    srctext += inputtext.find("textarea#fulltext").val();
+    srctext += $this.find("input#title").val() + "\n";
+    srctext += $this.find("textarea#fulltext").val();
     // Init table's data
     table.initFromText(srctext);
-    $this.append(table.getHTML());
+    // Show the table
+    $content.find(".panel-body").append(table.getHTML());
+    // Announce success
+    let success = document.createElement("p");
+    success.classList += "text-success";
+    success.innerHTML = "Đã tạo bài test. Mời bạn làm bài ở mục <a href='#test-content'>Làm bài</a>.";
+    $this.after(success);
 });
