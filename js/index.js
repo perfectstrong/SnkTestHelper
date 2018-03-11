@@ -72,7 +72,7 @@ class TableTest {
         // Other metadata
         this.metadata = {
             title: "", // Title of chosen text
-            candidate: "", // SNK Nickname
+            nickname: "", // SNK Nickname
             attempt: 0, // Number of attempts candidate has tried
             _testtittle: "", // Title of this test, calculated by rule
         }
@@ -165,7 +165,7 @@ class TableTest {
      * @memberof TableTest
      */
     setCandidate(name) {
-        this.metadata.candidate = name.replace("_", " ");
+        this.metadata.nickname = name.replace("_", " ");
     }
 
     /**
@@ -197,7 +197,7 @@ class TableTest {
     getTestTitle() {
         if (!this.metadata._testtittle) {
             this.metadata._testtittle =
-                "SNKTEST_" + this.metadata.candidate
+                "SNKTEST_" + this.metadata.nickname
                 + "_" + this.metadata.title
                 + "_" + this.metadata.attempt;
         }
@@ -256,6 +256,91 @@ class TableTest {
      */
     JSONStringify() {
         return JSON.stringify(this);
+    }
+
+    /**
+     * In order to create a html file
+     * 
+     * @see https://effectiveinc.com/effective-thinking/articles/generating-downloadable-word-document-browser/
+     * 
+     * @returns {HTMLHtmlElement} a basic table in html with a title
+     * @memberof TableTest
+     */
+    getHTMLPage() {
+        let html = document.createElement("html"),
+            head = document.createElement("head"),
+            body = document.createElement("body");
+        html.appendChild(head);
+        html.appendChild(body);
+
+        // Set the header
+        // Charset
+        let charset = document.createElement("meta");
+        head.appendChild(charset);
+        charset.setAttribute("charset", "utf-8");
+        // Title
+        let title = document.createElement("title");
+        head.appendChild(title);
+        title.innerText = this.getTestTitle();
+        // Style
+        let style = document.createElement("style");
+        head.appendChild(style);
+        style.innerText = "table {border-collapse: collapse;}"
+            + "table, td, tr {border: solid 1px black}"
+            + "td {width: 50%}";
+
+        // Set the body
+        // Title
+        let heading = document.createElement("h1");
+        body.appendChild(heading);
+        heading.innerText = this.metadata.title;
+        heading.id = "title";
+        // Nickname
+        let nickname = document.createElement("p");
+        body.appendChild(nickname);
+        let lblNickname = document.createElement("label");
+        nickname.appendChild(lblNickname);
+        lblNickname.setAttribute("for", "nickname");
+        lblNickname.innerText = "Nickname trên Sonako:";
+        let valueNickname = document.createElement("span");
+        nickname.appendChild(valueNickname);
+        valueNickname.id = "nickname";
+        valueNickname.innerText = this.metadata.nickname;
+        // Attempt
+        let attempt = document.createElement("p");
+        body.appendChild(attempt);
+        let lblAttempt = document.createElement("label");
+        attempt.appendChild(lblAttempt);
+        lblAttempt.setAttribute("for", "attempt");
+        lblAttempt.innerText = "Lần test thứ:";
+        let valueAttempt = document.createElement("span");
+        attempt.appendChild(valueAttempt);
+        valueAttempt.id = "attempt";
+        valueAttempt.innerText = this.metadata.attempt;
+
+        // Calculate the table
+        let content = document.createElement("table");
+        body.appendChild(content);
+        let tbody = document.createElement("tbody");
+        content.appendChild(tbody);
+        for (let index = 0; index < this.data.length; index++) {
+            const line = this.data[index];
+
+            let row = document.createElement("tr");
+            tbody.appendChild(row);
+            row.id = line.id;
+
+            let srcTxt = document.createElement("td"),
+                destTxt = document.createElement("td");
+            row.appendChild(srcTxt);
+            row.appendChild(destTxt);
+            srcTxt.innerText = line.src;
+            srcTxt.classList += "src";
+            destTxt.innerText = line.dest;
+            destTxt.classList += "dest";
+        }
+
+        return html;
     }
 }
 
@@ -343,7 +428,7 @@ $maker.find("form#input-text").submit(function initTableTest(ev) {
 
 /* Test saver */
 // Web storage
-$saver.find("button#save-browser").click(function (ev) {
+$saver.find("button#save-browser").click(function saveWebStorage(ev) {
     let $status = $(this).parent().find(".status");
     if (typeof (Storage) !== "undefined") {
         localStorage.setItem(table.getTestTitle(), table.JSONStringify());
@@ -351,4 +436,13 @@ $saver.find("button#save-browser").click(function (ev) {
     } else {
         $status.html("Trình duyệt của bạn không hỗ trợ Web Storage.");
     }
+});
+// HTML
+$saver.find("button#save-html").click(function saveHTML(ev) {
+    let $status = $(this).parent().find(".status");
+    let link = document.createElement("a");
+    link.download = table.getTestTitle() + ".html";
+    link.href = "data:text/html," + encodeURIComponent(table.getHTMLPage().innerHTML);
+    link.innerText = "đây";
+    $status.html("Đã lưu. Bạn có thể tải tại " + link.outerHTML + ".");
 });
