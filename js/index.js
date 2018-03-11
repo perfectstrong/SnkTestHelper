@@ -342,6 +342,20 @@ class TableTest {
 
         return html;
     }
+
+    /**
+     * Check if the table has been set
+     * 
+     * @returns {Boolean} true if there is no line in data. False otherwise
+     * @memberof TableTest
+     */
+    isEmpty() {
+        if (this.data.length == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 
 /**
@@ -404,7 +418,10 @@ let $maker = $("#test-maker"),
 /* Test maker */
 $maker.find("form#input-text").submit(function initTableTest(ev) {
     ev.preventDefault();
-    let $this = $(this);
+    let $this = $(this),
+        $status = $this.parent().find("[role=status]");
+    $status.removeClass();
+    $status.html("");
     // Flush old content
     $content.find(".panel-body").empty();
     // Get metatdata
@@ -418,29 +435,51 @@ $maker.find("form#input-text").submit(function initTableTest(ev) {
     // Show the table
     $content.find(".panel-body").append(table.getHTML());
     // Announce success
-    let success = document.createElement("p");
-    success.classList += "text-success";
-    success.innerHTML = "Đã tạo bài test. Mời bạn làm bài ở mục <a href='#test-content'>Làm bài</a>.";
-    $this.after(success);
+    $status.addClass("text-success");
+    $status.html("Đã tạo bài test. Mời bạn làm bài ở mục <a href='#test-content'>Làm bài</a>.");
 });
 
 /* Test saver */
 // Web storage
 $saver.find("button#save-browser").click(function saveWebStorage(ev) {
-    let $status = $(this).parent().find(".status");
-    if (typeof (Storage) !== "undefined") {
-        localStorage.setItem(table.getTestTitle(), table.JSONStringify());
-        $status.html("Đã lưu với tên " + table.getTestTitle());
-    } else {
-        $status.html("Trình duyệt của bạn không hỗ trợ Web Storage.");
+    let $status = $(this).parent().find("[role=status]");
+    $status.removeClass();
+    $status.html("");
+    // Check if table is empty
+    if (table.isEmpty()) {
+        $status.addClass("text-warning");
+        $status.html("Không có bài test nào đang mở!");
+        return false;
     }
+    // Check web storage
+    if (typeof (Storage) == "undefined") {
+        $status.addClass("text-danger");
+        $status.html("Trình duyệt của bạn không hỗ trợ Web Storage.");
+        return false;
+    }
+    // Normal run
+    localStorage.setItem(table.getTestTitle(), table.JSONStringify());
+    $status.addClass("text-success");
+    $status.html("Đã lưu với tên " + table.getTestTitle());
+    return true;
 });
 // HTML
 $saver.find("button#save-html").click(function saveHTML(ev) {
-    let $status = $(this).parent().find(".status");
+    let $status = $(this).parent().find("[role=status]");
+    $status.removeClass();
+    $status.html("");
+    // Check if table is empty
+    if (table.isEmpty()) {
+        $status.addClass("text-warning");
+        $status.html("Không có bài test nào đang mở!");
+        return false;
+    }
+    // Normal run
     let link = document.createElement("a");
     link.download = table.getTestTitle() + ".html";
     link.href = "data:text/html," + encodeURIComponent(table.getHTMLPage().innerHTML);
     link.innerText = "đây";
+    $status.addClass("text-success");
     $status.html("Đã lưu. Bạn có thể tải tại " + link.outerHTML + ".");
+    return true;
 });
