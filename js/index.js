@@ -35,9 +35,9 @@ class Line {
         txtSrc.value = this.src;
         txtSrc.classList += "src form-control";
         div.appendChild(txtSrc);
-        txtSrc.onkeyup = function updateSrc(ev) {
+        txtSrc.onkeyup = _ => {
             // Regularly update content
-            this.src = txtSrc.value;
+            self.src = txtSrc.value;
         }
 
         // Control buttons
@@ -49,9 +49,9 @@ class Line {
         txtDest.value = this.dest;
         txtDest.classList += "dest form-control";
         div.appendChild(txtDest);
-        txtDest.onkeyup = function updateDest(ev) {
+        txtDest.onkeyup = _ => {
             // Regularly update content
-            this.dest = txtDest.value;
+            self.dest = txtDest.value;
         }
 
         return div;
