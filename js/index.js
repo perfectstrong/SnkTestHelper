@@ -37,7 +37,7 @@ class Line {
         div.appendChild(txtSrc);
         txtSrc.onkeyup = _ => {
             // Regularly update content
-            self.src = txtSrc.value;
+            this.src = txtSrc.value;
         }
 
         // Control buttons
@@ -51,7 +51,7 @@ class Line {
         div.appendChild(txtDest);
         txtDest.onkeyup = _ => {
             // Regularly update content
-            self.dest = txtDest.value;
+            this.dest = txtDest.value;
         }
 
         return div;
