@@ -219,10 +219,10 @@ class TableTest {
     /**
      * Initialize data from loaded json
      * 
-     * @param {any} json 
+     * @param {String} jsonstring a string in format of json
      * @memberof TableTest
      */
-    initFromJSON(json) {
+    initFromJSON(jsonstring) {
         // TODO
     }
 
@@ -246,6 +246,16 @@ class TableTest {
         this.data.forEach(line => div.appendChild(line.getHTML()));
 
         return div;
+    }
+
+    /**
+     * In order to save into browser's memory
+     * 
+     * @returns {String} stringified version of this table
+     * @memberof TableTest
+     */
+    JSONStringify() {
+        return JSON.stringify(this);
     }
 }
 
@@ -274,9 +284,6 @@ function buildControlButtons() {
             table.insertAt(pos + 1, newLine);
             // Add HTML
             lineDiv.after(newLine.getHTML());
-        } else {
-            // TODO
-            // Set warning modal
         }
     };
     $(btnAdd).tooltip(); // Initialize bootstrap tooltip
@@ -288,7 +295,6 @@ function buildControlButtons() {
     btnDel.setAttribute("title", "Xóa dòng này");
     ctrlButtons.appendChild(btnDel);
     btnDel.onclick = function deleteThisLine(ev) {
-        // TODO
         let lineDiv = $(ev.target).parent().parent(),
             lineID = lineDiv.attr(datalineid),
             pos = table.findIndexOfLineHavingId(lineID);
@@ -297,9 +303,6 @@ function buildControlButtons() {
             table.deleteLineHavingId(lineID);
             // Delete HTML
             lineDiv.remove();
-        } else {
-            // TODO
-            // Set warning modal
         }
     };
     $(btnDel).tooltip(); // Intialize boostrap tooltip
@@ -314,7 +317,7 @@ let $maker = $("#test-maker"),
     $loader = $("#test-loader");
 
 /* Test maker */
-$maker.find("form#input-text").submit(function (ev) {
+$maker.find("form#input-text").submit(function initTableTest(ev) {
     ev.preventDefault();
     let $this = $(this);
     // Flush old content
@@ -336,4 +339,16 @@ $maker.find("form#input-text").submit(function (ev) {
     success.classList += "text-success";
     success.innerHTML = "Đã tạo bài test. Mời bạn làm bài ở mục <a href='#test-content'>Làm bài</a>.";
     $this.after(success);
+});
+
+/* Test saver */
+// Web storage
+$saver.find("button#save-browser").click(function (ev) {
+    let $status = $(this).parent().find(".status");
+    if (typeof (Storage) !== "undefined") {
+        localStorage.setItem(table.getTestTitle(), table.JSONStringify());
+        $status.html("Đã lưu với tên " + table.getTestTitle());
+    } else {
+        $status.html("Trình duyệt của bạn không hỗ trợ Web Storage.");
+    }
 });
