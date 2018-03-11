@@ -412,9 +412,7 @@ $maker.find("form#input-text").submit(function initTableTest(ev) {
     table.setCandidate($this.find("input#nickname").val());
     table.setAttempt($this.find("input#attempt").val());
     // Get the input text from form
-    let srctext = "";
-    srctext += $this.find("input#title").val() + "\n";
-    srctext += $this.find("textarea#fulltext").val();
+    let srctext = $this.find("textarea#fulltext").val();
     // Init table's data
     table.initFromText(srctext);
     // Show the table
