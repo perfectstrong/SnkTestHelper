@@ -483,3 +483,36 @@ $saver.find("button#save-html").click(function saveHTML(ev) {
     $status.html("Đã lưu. Bạn có thể tải tại " + link.outerHTML + ".");
     return true;
 });
+// Doc
+$saver.find("button#save-doc").click(function saveDoc() {
+    let $status = $(this).parent().find("[role=status]");
+    $status.removeClass();
+    $status.html("");
+    // Check if table is empty
+    if (table.isEmpty()) {
+        $status.addClass("text-warning");
+        $status.html("Không có bài test nào đang mở!");
+        return false;
+    }
+    // Normal run
+    let html = table.getHTMLPage();
+
+    // Some attribute of html
+    html.setAttribute("xmlns:office", "urn:schemas-microsoft-com:office:office");
+    html.setAttribute("xmlns:word", "urn:schemas-microsoft-com:office:word");
+    html.setAttribute("xmlns", "http://www.w3.org/TR/REC-html40");
+    let head = html.getElementsByTagName("head")[0];
+    let xml = document.createElement("xml");
+    head.appendChild(xml);
+    xml.innerHTML = "<word:WordDocument>" +
+        "<word:View>Print</word:View>" +
+        "<word:Zoom>90</word:Zoom>" +
+        "<word:DoNotOptimizeForBrowser/>" +
+        "</word:WordDocument>";
+    let link = document.createElement("a");
+    link.download = table.getTestTitle() + ".doc";
+    link.innerText = "đây";
+    link.href = URL.createObjectURL(new Blob([html.outerHTML], {type: "text/html"}));
+    $status.addClass("text-success");
+    $status.html("Đã lưu. Bạn có thể tải tại " + link.outerHTML + ".");
+});
