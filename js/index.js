@@ -41,7 +41,7 @@ class Line {
         }
 
         // Control buttons
-        div.appendChild(buildControlButtons(this));
+        div.appendChild(controlButtons(this));
 
         // Dest
         let txtDest = document.createElement("textarea");
@@ -164,7 +164,7 @@ class TableTest {
      * @param {String} name 
      * @memberof TableTest
      */
-    setCandidate(name) {
+    setNickname(name) {
         this.metadata.nickname = name.replace("_", " ");
     }
 
@@ -237,11 +237,6 @@ class TableTest {
         let div = document.createElement("div");
         div.id = "table-test";
 
-        // Inner HTML
-        // Test title
-        let title = document.createElement("h3");
-        title.innerHTML = this.getTestTitle();
-        div.appendChild(title);
         // Test content
         this.data.forEach(line => div.appendChild(line.getHTML()));
 
@@ -294,30 +289,19 @@ class TableTest {
         let heading = document.createElement("h1");
         body.appendChild(heading);
         heading.innerText = this.metadata.title;
-        heading.id = "title";
+        heading.id = "testtitle";
         // Nickname
-        let nickname = document.createElement("p");
-        body.appendChild(nickname);
-        let lblNickname = document.createElement("label");
-        nickname.appendChild(lblNickname);
-        lblNickname.setAttribute("for", "nickname");
-        lblNickname.innerText = "Nickname trên Sonako:";
-        let valueNickname = document.createElement("span");
-        nickname.appendChild(valueNickname);
-        valueNickname.id = "nickname";
-        valueNickname.innerText = this.metadata.nickname;
+        body.appendChild(metadataBanner("nickname",
+            "Nickname trên Sonako:",
+            this.metadata.nickname));
         // Attempt
-        let attempt = document.createElement("p");
-        body.appendChild(attempt);
-        let lblAttempt = document.createElement("label");
-        attempt.appendChild(lblAttempt);
-        lblAttempt.setAttribute("for", "attempt");
-        lblAttempt.innerText = "Lần test thứ:";
-        let valueAttempt = document.createElement("span");
-        attempt.appendChild(valueAttempt);
-        valueAttempt.id = "attempt";
-        valueAttempt.innerText = this.metadata.attempt;
-
+        body.appendChild(metadataBanner("attempt",
+            "Lần test thứ:",
+            this.metadata.attempt));
+        // LN Title
+        body.appendChild(metadataBanner("title",
+            "Tiêu đề truyện:",
+            this.metadata.title));
         // Calculate the table
         let content = document.createElement("table");
         body.appendChild(content);
@@ -363,7 +347,7 @@ class TableTest {
  * 
  * @returns {HTMLDivElement} a div containing glyph buttons
  */
-function buildControlButtons() {
+function controlButtons() {
     let ctrlButtons = document.createElement("div");
     ctrlButtons.classList += "control-buttons";
 
@@ -409,6 +393,33 @@ function buildControlButtons() {
     return ctrlButtons;
 }
 
+/**
+ * Representation of a certain metadata
+ * 
+ * @param {String} id name of metadata
+ * @param {String} label description
+ * @param {String} value current value
+ * @param {Boolean} editable 
+ * @param {Function} onkeyuphandler 
+ * @returns {HTMLParagraphElement} a paragraph representing a certain metadata
+ */
+function metadataBanner(id, label, value, editable, onkeyuphandler) {
+    let p = document.createElement("p"),
+        lbl = document.createElement("label"),
+        val = document.createElement("span");
+    p.appendChild(lbl);
+    p.appendChild(val);
+    lbl.innerText = label;
+    lbl.setAttribute("for", id);
+    val.innerText = value;
+    val.setAttribute("id", id);
+    if (editable) {
+        val.setAttribute("contenteditable", editable);
+        val.onkeyup = onkeyuphandler;
+    }
+    return p;
+}
+
 let table = new TableTest(); // Data behind the table of test
 let $maker = $("#test-maker"),
     $content = $("#test-content"),
@@ -419,24 +430,56 @@ let $maker = $("#test-maker"),
 $maker.find("form#input-text").submit(function initTableTest(ev) {
     ev.preventDefault();
     let $this = $(this),
-        $status = $this.parent().find("[role=status]");
-    $status.removeClass();
-    $status.html("");
+        $makerStatus = $maker.find("[role=status]"),
+        $contentStatus = $content.find("[role=status]"),
+        $metadata = $content.find("#metadata");
     // Flush old content
-    $content.find(".panel-body").empty();
+    $makerStatus.removeClass();
+    $makerStatus.html("");
+    $contentStatus.removeClass();
+    $contentStatus.html("");
+    $metadata.removeClass();
+    $metadata.html("");
+    $content.find("#table-test").empty();
     // Get metatdata
     table.setTitle($this.find("input#title").val());
-    table.setCandidate($this.find("input#nickname").val());
+    table.setNickname($this.find("input#nickname").val());
     table.setAttempt($this.find("input#attempt").val());
     // Get the input text from form
     let srctext = $this.find("textarea#fulltext").val();
     // Init table's data
     table.initFromText(srctext);
+
+    /* Show editable metadata */
+    // Test title
+    let title = document.createElement("h3");
+    $metadata.append(title);
+    title.innerText = table.getTestTitle();
+    // Nickname
+    $metadata.append(metadataBanner("nickname",
+        "Nickname trên Sonako:",
+        table.metadata.nickname,
+        true,
+        (ev) => { table.metadata.nickname = ev.target.innerText }));
+    // Attempt
+    $metadata.append(metadataBanner("attempt",
+        "Lần test thứ:",
+        table.metadata.attempt,
+        true,
+        (ev) => { table.metadata.attempt = ev.target.innerText }));
+    // LN Title
+    $metadata.append(metadataBanner("title",
+        "Tiêu đề truyện:",
+        table.metadata.title,
+        true,
+        (ev) => { table.metadata.title = ev.target.innerText }));
     // Show the table
-    $content.find(".panel-body").append(table.getHTML());
+    $content.find("#table-test").html(table.getHTML());
     // Announce success
-    $status.addClass("text-success");
-    $status.html("Đã tạo bài test. Mời bạn làm bài ở mục <a href='#test-content'>Làm bài</a>.");
+    $makerStatus.addClass("text-success");
+    $makerStatus.html("Đã tạo bài test. Mời bạn làm bài ở mục <a href='#test-content'>Làm bài</a>.");
+    $contentStatus.addClass("text-success");
+    $contentStatus.html("Đã tạo bài test. Bạn có thể sửa trực tiếp các thông tin liên quan bài test mà không cần tạo lại bài test.");
 });
 
 /* Test saver */
@@ -512,7 +555,7 @@ $saver.find("button#save-doc").click(function saveDoc() {
     let link = document.createElement("a");
     link.download = table.getTestTitle() + ".doc";
     link.innerText = "đây";
-    link.href = URL.createObjectURL(new Blob([html.outerHTML], {type: "text/html"}));
+    link.href = URL.createObjectURL(new Blob([html.outerHTML], { type: "text/html" }));
     $status.addClass("text-success");
     $status.html("<p>Đã lưu. Bạn có thể tải tại " + link.outerHTML + ".</p>");
 });
