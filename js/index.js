@@ -189,9 +189,9 @@ class TableTest {
     }
 
     /**
+     * The full title of test according to rule
      * 
-     * 
-     * @returns {String} the title of test according to rule
+     * @returns {String} "SNKTEST\_<Nickname>\_<LN Title>\_<N° of Attempt>"
      * @memberof TableTest
      */
     getTestTitle() {
@@ -212,6 +212,7 @@ class TableTest {
      */
     initFromText(srctext) {
         let self = this;
+        self.data = [];
         srctext.split(/\n/)
             .forEach(linetext => self.push(new Line(linetext, "")));
     }
@@ -223,6 +224,27 @@ class TableTest {
      * @memberof TableTest
      */
     initFromJSON(jsonstring) {
+        this.data = [];
+        let json = JSON.parse(jsonstring);
+        /* Set metadata */
+        this.setTitle(json.metadata.title);
+        this.setNickname(json.metadata.nickname);
+        this.setAttempt(json.metadata.attempt);
+        /* Set data */
+        for (let index = 0; index < json.data.length; index++) {
+            const storedLine = json.data[index];
+            this.push(new Line(storedLine.src, storedLine.dest));
+        }
+    }
+
+    /**
+     * Initialize from a html page
+     * 
+     * @param {String} htmlstring
+     * @memberof TableTest
+     */
+    initFromHTML(htmlstring) {
+        console.log(htmlstring);
         // TODO
     }
 
@@ -420,6 +442,7 @@ function metadataBanner(id, label, value, editable, onkeyuphandler) {
     }
     return p;
 }
+
 /**
  * Set up the inside of test content division
  * 
@@ -539,7 +562,7 @@ $saver.find("button#save-html").click(function saveHTML(ev) {
     return true;
 });
 // Doc
-$saver.find("button#save-doc").click(function saveDoc() {
+$saver.find("button#save-doc").click(function saveDoc(ev) {
     let $status = $saver.find("[role=status]");
     $status.removeClass();
     $status.html("");
@@ -570,4 +593,76 @@ $saver.find("button#save-doc").click(function saveDoc() {
     link.href = URL.createObjectURL(new Blob([html.outerHTML], { type: "text/html" }));
     $status.addClass("text-success");
     $status.html("<p>Đã lưu. Bạn có thể tải tại " + link.outerHTML + ".</p>");
+});
+
+/* Test loader */
+// Web storage
+$loader.find("#open-browser").click(function openWebStorage(ev) {
+    let $status = $loader.find("[role=status]");
+    $status.empty(); // Flush old content
+    // Check web storage
+    if (typeof (Storage) == "undefined") {
+        $status.addClass("text-danger");
+        $status.html("<p>Trình duyệt của bạn không hỗ trợ Web Storage.</p>");
+        return false;
+    }
+    // Find all stored tests' keys
+    // which start with "SNKTEST"
+    let nameOfStoredTests = [];
+    for (let index = 0; index < localStorage.length; index++) {
+        let k = localStorage.key(index);
+        if (k.toUpperCase().startsWith("SNKTEST")) {
+            nameOfStoredTests.push(k);
+        }
+    }
+    // If no test found
+    if (nameOfStoredTests.length == 0) {
+        let warn = document.createElement("p");
+        $status.append(warn);
+        warn.classList += "text-danger";
+        warn.innerText = "Không tìm thấy bài test nào.";
+        return false;
+    }
+    // If else
+    // Show up a select input to choose the test
+    let form = document.createElement("form");
+    $status.append(form);
+    form.id = "choose-test";
+    form.classList += "form-inline";
+
+    let formGroupTestChooser = document.createElement("div");
+    form.appendChild(formGroupTestChooser);
+    formGroupTestChooser.classList += "form-group";
+
+    let lblTests = document.createElement("label");
+    lblTests.setAttribute("for", "tests");
+    lblTests.innerText = "Vui lòng chọn bài test bạn muốn mở:";
+    formGroupTestChooser.appendChild(lblTests);
+
+    let tests = document.createElement("select");
+    formGroupTestChooser.appendChild(tests);
+    tests.required = true;
+    tests.id = "tests";
+    tests.classList += "form-control";
+    nameOfStoredTests.forEach(key => {
+        let option = document.createElement("option");
+        option.innerText = key;
+        option.value = key;
+        tests.appendChild(option);
+    });
+
+    let btnChoose = document.createElement("button");
+    form.appendChild(btnChoose);
+    btnChoose.innerText = "Mở";
+    btnChoose.classList += "btn btn-primary";
+    btnChoose.type = "submit";
+
+    // Add handler when submit
+    form.onsubmit = function loadTest(ev) {
+        ev.preventDefault();
+        let chosenTestKey = this.querySelector("#tests").value;
+        table.initFromJSON(localStorage.getItem(chosenTestKey));
+        updateTestContent();
+        return false;
+    };
 });
