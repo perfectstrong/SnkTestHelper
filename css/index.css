@@ -33,7 +33,7 @@ textarea {
     flex-wrap: wrap;
 }
 
-#test-saver .panel-group {
+#test-saver #options.panel-group, #test-loader #options.panel-group {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-column-gap: 10px;
