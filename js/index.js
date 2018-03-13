@@ -442,7 +442,7 @@ $maker.find("form#input-text").submit(function initTableTest(ev) {
 /* Test saver */
 // Web storage
 $saver.find("button#save-browser").click(function saveWebStorage(ev) {
-    let $status = $(this).parent().find("[role=status]");
+    let $status = $saver.find("[role=status]");
     $status.removeClass();
     $status.html("");
     // Check if table is empty
@@ -460,12 +460,12 @@ $saver.find("button#save-browser").click(function saveWebStorage(ev) {
     // Normal run
     localStorage.setItem(table.getTestTitle(), table.JSONStringify());
     $status.addClass("text-success");
-    $status.html("Đã lưu với tên " + table.getTestTitle());
+    $status.html("<p>Đã lưu với tên " + table.getTestTitle() + ".</p>");
     return true;
 });
 // HTML
 $saver.find("button#save-html").click(function saveHTML(ev) {
-    let $status = $(this).parent().find("[role=status]");
+    let $status = $saver.find("[role=status]");
     $status.removeClass();
     $status.html("");
     // Check if table is empty
@@ -480,12 +480,12 @@ $saver.find("button#save-html").click(function saveHTML(ev) {
     link.href = "data:text/html," + encodeURIComponent(table.getHTMLPage().innerHTML);
     link.innerText = "đây";
     $status.addClass("text-success");
-    $status.html("Đã lưu. Bạn có thể tải tại " + link.outerHTML + ".");
+    $status.html("<p>Đã lưu. Bạn có thể tải tại " + link.outerHTML + ".</p>");
     return true;
 });
 // Doc
 $saver.find("button#save-doc").click(function saveDoc() {
-    let $status = $(this).parent().find("[role=status]");
+    let $status = $saver.find("[role=status]");
     $status.removeClass();
     $status.html("");
     // Check if table is empty
@@ -514,5 +514,5 @@ $saver.find("button#save-doc").click(function saveDoc() {
     link.innerText = "đây";
     link.href = URL.createObjectURL(new Blob([html.outerHTML], {type: "text/html"}));
     $status.addClass("text-success");
-    $status.html("Đã lưu. Bạn có thể tải tại " + link.outerHTML + ".");
+    $status.html("<p>Đã lưu. Bạn có thể tải tại " + link.outerHTML + ".</p>");
 });
