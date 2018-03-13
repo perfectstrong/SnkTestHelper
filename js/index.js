@@ -415,41 +415,24 @@ function metadataBanner(id, label, value, editable, onkeyuphandler) {
     val.setAttribute("id", id);
     if (editable) {
         val.setAttribute("contenteditable", editable);
+        val.classList += "text-info";
         val.onkeyup = onkeyuphandler;
     }
     return p;
 }
-
-let table = new TableTest(); // Data behind the table of test
-let $maker = $("#test-maker"),
-    $content = $("#test-content"),
-    $saver = $("#test-saver"),
-    $loader = $("#test-loader");
-
-/* Test maker */
-$maker.find("form#input-text").submit(function initTableTest(ev) {
-    ev.preventDefault();
-    let $this = $(this),
-        $makerStatus = $maker.find("[role=status]"),
-        $contentStatus = $content.find("[role=status]"),
-        $metadata = $content.find("#metadata");
+/**
+ * Set up the inside of test content division
+ * 
+ */
+function updateTestContent() {
+    let $contentStatus = $content.find("[role=status]"),
+        $metadata = $content.find("#metadata"),
+        $tabletest = $content.find("#table-test");
     // Flush old content
-    $makerStatus.removeClass();
-    $makerStatus.html("");
     $contentStatus.removeClass();
-    $contentStatus.html("");
+    $contentStatus.empty();
     $metadata.removeClass();
-    $metadata.html("");
-    $content.find("#table-test").empty();
-    // Get metatdata
-    table.setTitle($this.find("input#title").val());
-    table.setNickname($this.find("input#nickname").val());
-    table.setAttempt($this.find("input#attempt").val());
-    // Get the input text from form
-    let srctext = $this.find("textarea#fulltext").val();
-    // Init table's data
-    table.initFromText(srctext);
-
+    $metadata.empty();
     /* Show editable metadata */
     // Test title
     let title = document.createElement("h3");
@@ -473,13 +456,42 @@ $maker.find("form#input-text").submit(function initTableTest(ev) {
         table.metadata.title,
         true,
         (ev) => { table.metadata.title = ev.target.innerText }));
-    // Show the table
-    $content.find("#table-test").html(table.getHTML());
+    /* Show the test table */
+    $tabletest.replaceWith(table.getHTML());
+    /* Announcement */
+    $contentStatus.addClass("text-success");
+    $contentStatus.html("Đã tạo bài test. Bạn có thể sửa trực tiếp các thông tin liên quan bài test (chữ màu lam nhạt).");
+}
+
+let table = new TableTest(); // Data behind the table of test
+let $maker = $("#test-maker"),
+    $content = $("#test-content"),
+    $saver = $("#test-saver"),
+    $loader = $("#test-loader");
+
+/* Test maker */
+$maker.find("form#input-text").submit(function initTableTest(ev) {
+    ev.preventDefault();
+    let $this = $(this),
+        $makerStatus = $maker.find("[role=status]"),
+        $contentStatus = $content.find("[role=status]"),
+        $metadata = $content.find("#metadata");
+    // Flush old content
+    $makerStatus.removeClass();
+    $makerStatus.empty();
+    // Get metatdata
+    table.setTitle($this.find("input#title").val());
+    table.setNickname($this.find("input#nickname").val());
+    table.setAttempt($this.find("input#attempt").val());
+    // Get the input text from form
+    let srctext = $this.find("textarea#fulltext").val();
+    // Init table's data
+    table.initFromText(srctext);
+    // Setup test content
+    updateTestContent();
     // Announce success
     $makerStatus.addClass("text-success");
-    $makerStatus.html("Đã tạo bài test. Mời bạn làm bài ở mục <a href='#test-content'>Làm bài</a>.");
-    $contentStatus.addClass("text-success");
-    $contentStatus.html("Đã tạo bài test. Bạn có thể sửa trực tiếp các thông tin liên quan bài test mà không cần tạo lại bài test.");
+    $makerStatus.html("<p>Đã tạo bài test. Mời bạn làm bài ở mục <a href='#test-content'>Làm bài</a>.</p>");
 });
 
 /* Test saver */
