@@ -189,19 +189,24 @@ class TableTest {
     }
 
     /**
+     * Reset counter to regenerate ID
+     * 
+     * @memberof TableTest
+     */
+    resetCounter() {
+        this.counter = -1;
+    }
+
+    /**
      * The full title of test according to rule
      * 
      * @returns {String} "SNKTEST\_<Nickname>\_<LN Title>\_<N° of Attempt>"
      * @memberof TableTest
      */
     getTestTitle() {
-        if (!this.metadata._testtittle) {
-            this.metadata._testtittle =
-                "SNKTEST_" + this.metadata.nickname
-                + "_" + this.metadata.title
-                + "_" + this.metadata.attempt;
-        }
-        return this.metadata._testtittle;
+        return "SNKTEST_" + this.metadata.nickname
+            + "_" + this.metadata.title
+            + "_" + this.metadata.attempt;
     }
 
     /**
@@ -224,13 +229,14 @@ class TableTest {
      * @memberof TableTest
      */
     initFromJSON(jsonstring) {
-        this.data = [];
         let json = JSON.parse(jsonstring);
         /* Set metadata */
+        this.resetCounter();
         this.setTitle(json.metadata.title);
         this.setNickname(json.metadata.nickname);
         this.setAttempt(json.metadata.attempt);
         /* Set data */
+        this.data = [];
         for (let index = 0; index < json.data.length; index++) {
             const storedLine = json.data[index];
             this.push(new Line(storedLine.src, storedLine.dest));
@@ -238,14 +244,35 @@ class TableTest {
     }
 
     /**
-     * Initialize from a html page
+     * Initialize from a html page. It should have:
+     * + LN title with id "title"
+     * + nickname of candidate with id "nickname"
+     * + the attempt of candidation with id "attempt"
+     * 
+     * Furthermore, this will parse all tr elements having exactly
+     * 2 td inside, assuming the one on the left is "source" while
+     * the other is "destination".
      * 
      * @param {String} htmlstring
      * @memberof TableTest
      */
     initFromHTML(htmlstring) {
-        console.log(htmlstring);
-        // TODO
+        let parser = new DOMParser(),
+            html = parser.parseFromString(htmlstring, "text/html");
+        this.resetCounter();
+        this.setTitle(html.querySelector("#title").innerText);
+        this.setNickname(html.querySelector("#nickname").innerText);
+        this.setAttempt(html.querySelector("#attempt").innerText);
+        this.data = [];
+        // Retrieve all tr having exactly 2 td inside,
+        // assuming td td on the left is "source"
+        // and the other on the right is "destination"
+        html.querySelectorAll("tr").forEach(tr => {
+            let listtd = tr.querySelectorAll("td");
+            if (listtd.length == 2) {
+                this.push(new Line(listtd.item(0).innerText, listtd.item(1).innerText));
+            }
+        });
     }
 
     /**
@@ -665,4 +692,49 @@ $loader.find("#open-browser").click(function openWebStorage(ev) {
         updateTestContent();
         return false;
     };
+});
+// HTML
+$loader.find("#open-html").click(function openHTML(ev) {
+    let $status = $loader.find("[role=status]");
+    $status.empty(); // Flush old content
+
+    /* Create a form to submit file */
+    let form = document.createElement("form");
+    $status.append(form);
+    form.id = "html-chooser";
+    form.classList += "form-inline";
+
+    let div = document.createElement("div");
+    form.appendChild(div);
+    div.classList = "form-group";
+
+    let lbl = document.createElement("label");
+    div.appendChild(lbl);
+    lbl.setAttribute("for", "html-file-chooser");
+    lbl.innerText = "Mời chọn file:";
+
+    let fc = document.createElement("input");
+    div.appendChild(fc);
+    fc.type = "file";
+    fc.id = "html-file-chooser";
+    fc.accept = "text/html";
+    fc.classList += "form-control";
+
+    let btn = document.createElement("button");
+    form.appendChild(btn);
+    btn.type = "submit";
+    btn.classList += "btn btn-primary";
+    btn.innerText = "Mở";
+
+    /* Redefinie behavior of form */
+    form.onsubmit = function loadHTML(ev) {
+        ev.preventDefault();
+        let chosenFile = this.querySelector("input#html-file-chooser").files[0];
+        let reader = new FileReader();
+        reader.onload = function loadTableTest(ev) {
+            table.initFromHTML(ev.target.result);
+            updateTestContent();
+        }
+        reader.readAsText(chosenFile);
+    }
 });
