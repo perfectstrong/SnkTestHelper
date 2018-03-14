@@ -1,5 +1,7 @@
 # Sonako Test Helper
 
+_Version 0.1.0 (3/2018)_
+
 This site is built to simplify the creation of translationg table when taking test of [Sonako](http://sonako.wikia.com/wiki/Sonako_Light_Novel).
 
 Checkout the detail of entrance exam [here](https://docs.google.com/document/d/1D-O3jBRr88aRgI2b6U1IwE7YTOIpS4kdeJ0PjMNi7-o/edit?usp=sharing).
@@ -27,7 +29,7 @@ The site is ready by opening `index.html`.
 
 ### Tests
 
-To be written in the near future.
+To be written in the near future. Need some helps.
 
 ## Author
 
@@ -39,3 +41,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
+[Generating a Downloadable Word Document in the Browser](https://effectiveinc.com/effective-thinking/articles/generating-downloadable-word-document-browser/)
