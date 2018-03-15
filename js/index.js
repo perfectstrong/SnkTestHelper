@@ -74,7 +74,6 @@ class TableTest {
             title: "", // Title of chosen text
             nickname: "", // SNK Nickname
             attempt: 0, // Number of attempts candidate has tried
-            _testtittle: "", // Title of this test, calculated by rule
         }
         this.counter = 0;
     }
@@ -208,7 +207,6 @@ class TableTest {
      */
     initFromText(srctext) {
         let self = this;
-        self.reset();
         srctext.split(/\n/)
             .forEach(linetext => self.push(new Line(linetext, "")));
     }
@@ -386,7 +384,7 @@ class TableTest {
      */
     reset() {
         this.data = [];
-        this.counter = -1;
+        this.counter = 0;
         this.setAttempt(0);
         this.setNickname("");
         this.setTitle("");
@@ -544,6 +542,22 @@ $maker.find("form#input-text").submit(function initTableTest(ev) {
     // Announce success
     $makerStatus.addClass("text-success");
     $makerStatus.html("<p>Đã tạo bài test. Mời bạn làm bài ở mục <a href='#test-content'>Làm bài</a>.</p>");
+});
+
+/* Test content */
+// Clear test
+$content.find("#test-clear").click(function clearTest(ev) {
+    let $status = $content.find("[role=status]");
+    // Clean interface
+    $status.removeClass();
+    $status.empty();
+    $content.find("#metadata").empty();
+    $content.find("#table-test").empty();
+    // Clean table
+    table.reset();
+    // Announce result
+    $status.addClass("text-warning");
+    $status.html('<p><span class="glyphicon glyphicon-warning-sign"></span>Không có bài test nào đang mở. Hãy <a href="#test-maker">tạo bài test</a> hoặc <a href="#test-loader">mở bài</a>.</p>');
 });
 
 /* Test saver */
