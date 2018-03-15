@@ -40,9 +40,18 @@
             <a href="http://sonako.wikia.com/wiki/Sonako_Light_Novel">
                 <img src="img/logo.svg" class="media-object center-block" style="max-width: 30%; min-width: 300px;">
             </a>
-            <p>Webapp này sinh ra với mục đích giúp các bạn dễ dàng tạo và thực hiện bài test tuyển quân của Sonako.</p>
+            <p>
+                Webapp này sinh ra với mục đích giúp các bạn dễ dàng tạo và thực hiện bài test tuyển quân của Sonako.
+            </p>
             <p>Chi tiết về thể lệ tuyển quân, xin xem tại
-                <a href="https://docs.google.com/document/d/1D-O3jBRr88aRgI2b6U1IwE7YTOIpS4kdeJ0PjMNi7-o/edit?usp=sharing">đây</a>.</p>
+                <a href="https://docs.google.com/document/d/1D-O3jBRr88aRgI2b6U1IwE7YTOIpS4kdeJ0PjMNi7-o/edit?usp=sharing">đây</a>.
+            </p>
+            <p>
+                Bạn có thể lưu trang web này về (ctrl+S) và mở ở chế độ offline. Mọi chức năng đều sẽ hoạt động bình thường.
+            </p>
+            <p>
+                Chương trình còn trong giai đoạn phát triển. Mọi ý kiến đóng góp hay vấn đề xuất hiện khi sử dụng webapp này, xin báo cáo trong group Sonako với cặp hashtag <em>#snktest #snktesthelper</em> hoặc gửi lên <a href="http://sonako.wikia.com/wiki/Message_Wall:Perfectstrong">tường của mình</a>. Vui lòng ghi rõ bạn sử dụng trình duyệt nào, phiên bản mấy, lỗi ở chức năng nào, các bước dẫn tới lỗi.
+            </p>
         </div>
 
         <!-- Test maker -->
@@ -51,6 +60,35 @@
                 <h2>Tạo bài test</h2>
             </div>
             <div class="panel-body">
+                <div class="text-info well user-guide">
+                    <p>
+                        Bạn nhập thông tin bản thân và nội dung bạn muốn dịch.
+                    </p>
+                    <ul>
+                        <li>
+                            <b>Nickname trên Sonako:</b> Nếu bạn chưa tạo tài khoản trên wikia thì vui lòng đăng ký ở đây
+                            <a href="https://www.wikia.com/register">https://www.wikia.com/register</a>.
+                        </li>
+                        <li>
+                            <b>Lần test thứ:</b> Nếu đây là lần đầu tiên bạn làm bài test tuyển quân thì hãy nhập
+                            <b>1</b>. Lưu ý, nếu bạn thi lại thì phải chờ ít nhất
+                            <em>2 tháng</em> sau khi có kết quả từ lần trước.
+                        </li>
+                        <li>
+                            <b>Tiêu đề truyện:</b> Hãy nhập tên tiếng Anh hoặc romanji của bộ truyện bạn chọn làm bài thi.
+                        </li>
+                        <li>
+                            <b>Văn bản nguồn:</b> Bạn sao chép và dán đoạn văn bản nguồn mà bạn đã chọn. Dung lượng
+                            <b>3000 - 4000 từ</b> (nếu là tiếng Anh, các ngôn ngữ khác thì sẽ có giải đáp cụ thể hơn trong group
+                            của Sonako). Bạn có thể dán kèm theo tiêu đề của chương truyện.
+                        </li>
+                    </ul>
+                    <p>
+                        Một khi đã nhập xong thông tin, hãy ấn nút
+                        <b>tạo test</b> và kéo xuống mục
+                        <a href="#test-content">làm bài</a> để bắt tay vào dịch.
+                    </p>
+                </div>
                 <form id="input-text">
                     <div class="form-group">
                         <label for="nickname">Nickname trên Sonako:</label>
@@ -83,10 +121,34 @@
                 <button class="btn btn-danger btn-right" id="test-clear">Xóa bài làm hiện tại</button>
             </div>
             <div class="panel-body">
+                <div class="text-info well user-guide">
+                    <p>
+                        Sau khi
+                        <a href="#test-maker">tạo bài test</a> hoặc
+                        <a href="#test-loader">mở bài test</a> (bạn chỉ có thể mở bài test đã được lưu bằng chức năng
+                        <a href="#test-saver">lưu bài</a>), bài làm của bạn sẽ hiện ra ở đây.
+                    </p>
+                    <p>
+                        Sử dụng dấu
+                        <b>+</b> để thêm một dòng trống mới ngay sau dòng hiện tại.
+                    </p>
+                    <p>
+                        Sử dụng dấu
+                        <b>x</b> để xóa dòng hiện tại.
+                    </p>
+                    <p>
+                        Ấn nút
+                        <b>
+                            <a href="#test-clear">xóa bài làm hiện tại</a>
+                        </b> để xóa kết quả bạn đã tạo hoặc mở.
+                    </p>
+                </div>
                 <div role="status" class="text-warning">
                     <p>
                         <span class="glyphicon glyphicon-warning-sign"></span>
-                        Không có bài test nào đang mở. Hãy <a href="#test-maker">tạo bài test</a> hoặc <a href="#test-loader">mở bài</a>.
+                        Không có bài test nào đang mở. Hãy
+                        <a href="#test-maker">tạo bài test</a> hoặc
+                        <a href="#test-loader">mở bài</a>.
                     </p>
                 </div>
                 <div id="metadata"></div>
@@ -100,6 +162,25 @@
                 <h2>Lưu bài</h2>
             </div>
             <div class="panel-body">
+                <div class="text-info well user-guide">
+                    <p>
+                        Bạn có thể lưu bài đã làm xong để đem đi nộp hoặc bài đang làm dở để lần sau mở ra lại làm tiếp. Nếu muốn nộp thì nên nộp
+                        dạng doc, docx hoặc Google Doc.
+                    </p>
+                    <ul>
+                        <li>
+                            <b>Lưu dạng .html:</b> Bài làm sẽ được lưu thành một trang web offline. Ban có thể mở file bằng
+                            bất kỳ trình duyệt nào, MS Word, hoặc Google Doc.
+                        </li>
+                        <li>
+                            <b>Lưu dạng .doc:</b> Bài làm sẽ được lưu thành một file doc.
+                        </li>
+                        <li>
+                            <b>Lưu vào trình duyệt:</b> Bài làm sẽ được ghi vào bộ nhớ của trình duyệt.
+                            <span class="text-warning">Lưu ý: bạn lưu ở trình duyệt nào thì chỉ có trình duyệt ấy mới mở lại được.</span>
+                        </li>
+                    </ul>
+                </div>
                 <div class="options">
                     <button class="btn btn-primary" id="save-html">Lưu dạng .html</button>
                     <button class="btn btn-primary" id="save-doc">Lưu dạng .doc</button>
@@ -115,6 +196,21 @@
                 <h2>Mở bài</h2>
             </div>
             <div class="panel-body">
+                <div class="text-info well user-guide">
+                    <p>
+                        Tại đây, bạn có thể mở những gì bạn đã lưu.
+                    </p>
+                    <ul>
+                        <li>
+                            <b>Mở .html:</b> Mở file html bạn đã tạo bằng chức năng
+                            <a href="#save-html">lưu dạng .html</a>.
+                        </li>
+                        <li>
+                            <b>Mở từ trình duyệt:</b> Mở kết quả bạn đã lưu vào trình duyệt.
+                            <span class="text-warning">Lưu ý: bạn lưu ở trình duyệt nào thì chỉ có trình duyệt ấy mới mở lại được.</span>
+                        </li>
+                    </ul>
+                </div>
                 <div class="options">
                     <button class="btn btn-primary" id="open-html">Mở .html</button>
                     <!-- <button class="btn btn-primary" id="open-doc">Mở .doc</button> -->
@@ -129,9 +225,17 @@
     <footer class="page-footer">
         <div class="container-fluid text-center">
             <p class="text-muted">Version 0.1.0 (3/2018)</p>
-            <p>License: <a href="LICENSE">MIT</a></p>
-            <p>© 2018 Copyright: <a href="http://sonako.wikia.com/wiki/User:Perfectstrong">perfectstrong</a></p>
-            <p></p><a href="https://github.com/perfectstrong/SnkTestHelper"><img src="githubicon32.png"></a></p>
+            <p>License:
+                <a href="LICENSE">MIT</a>
+            </p>
+            <p>© 2018 Copyright:
+                <a href="http://sonako.wikia.com/wiki/User:Perfectstrong">perfectstrong</a>
+            </p>
+            <p></p>
+            <a href="https://github.com/perfectstrong/SnkTestHelper">
+                <img src="githubicon32.png">
+            </a>
+            </p>
         </div>
     </footer>
 
