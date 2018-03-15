@@ -189,15 +189,6 @@ class TableTest {
     }
 
     /**
-     * Reset counter to regenerate ID
-     * 
-     * @memberof TableTest
-     */
-    resetCounter() {
-        this.counter = -1;
-    }
-
-    /**
      * The full title of test according to rule
      * 
      * @returns {String} "SNKTEST\_<Nickname>\_<LN Title>\_<N° of Attempt>"
@@ -217,7 +208,7 @@ class TableTest {
      */
     initFromText(srctext) {
         let self = this;
-        self.data = [];
+        self.reset();
         srctext.split(/\n/)
             .forEach(linetext => self.push(new Line(linetext, "")));
     }
@@ -231,12 +222,11 @@ class TableTest {
     initFromJSON(jsonstring) {
         let json = JSON.parse(jsonstring);
         /* Set metadata */
-        this.resetCounter();
+        this.reset();
         this.setTitle(json.metadata.title);
         this.setNickname(json.metadata.nickname);
         this.setAttempt(json.metadata.attempt);
         /* Set data */
-        this.data = [];
         for (let index = 0; index < json.data.length; index++) {
             const storedLine = json.data[index];
             this.push(new Line(storedLine.src, storedLine.dest));
@@ -259,11 +249,10 @@ class TableTest {
     initFromHTML(htmlstring) {
         let parser = new DOMParser(),
             html = parser.parseFromString(htmlstring, "text/html");
-        this.resetCounter();
+        this.reset();
         this.setTitle(html.querySelector("#title").innerText);
         this.setNickname(html.querySelector("#nickname").innerText);
         this.setAttempt(html.querySelector("#attempt").innerText);
-        this.data = [];
         // Retrieve all tr having exactly 2 td inside,
         // assuming td td on the left is "source"
         // and the other on the right is "destination"
@@ -388,6 +377,19 @@ class TableTest {
         } else {
             return false;
         }
+    }
+
+    /**
+     * Reset all properties
+     * 
+     * @memberof TableTest
+     */
+    reset() {
+        this.data = [];
+        this.counter = -1;
+        this.setAttempt(0);
+        this.setNickname("");
+        this.setTitle("");
     }
 }
 
