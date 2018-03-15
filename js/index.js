@@ -26,14 +26,14 @@ class Line {
      */
     getHTML() {
         let div = document.createElement("div");
-        div.classList += "line form-inline";
+        div.className += " line form-inline";
         div.setAttribute(datalineid, this.id);
 
         // Src
         let txtSrc = document.createElement("textarea");
         txtSrc.setAttribute("rows", 3);
         txtSrc.value = this.src;
-        txtSrc.classList += "src form-control";
+        txtSrc.className += " src form-control";
         div.appendChild(txtSrc);
         txtSrc.onkeyup = _ => {
             // Regularly update content
@@ -47,7 +47,7 @@ class Line {
         let txtDest = document.createElement("textarea");
         txtDest.setAttribute("rows", 3);
         txtDest.value = this.dest;
-        txtDest.classList += "dest form-control";
+        txtDest.className += " dest form-control";
         div.appendChild(txtDest);
         txtDest.onkeyup = _ => {
             // Regularly update content
@@ -368,9 +368,9 @@ class TableTest {
             row.appendChild(srcTxt);
             row.appendChild(destTxt);
             srcTxt.innerText = line.src;
-            srcTxt.classList += "src";
+            srcTxt.className += " src";
             destTxt.innerText = line.dest;
-            destTxt.classList += "dest";
+            destTxt.className += " dest";
         }
 
         return html;
@@ -398,11 +398,11 @@ class TableTest {
  */
 function controlButtons() {
     let ctrlButtons = document.createElement("div");
-    ctrlButtons.classList += "control-buttons";
+    ctrlButtons.className += " control-buttons";
 
     // Add new line
     let btnAdd = document.createElement("button");
-    btnAdd.classList += "btn btn-primary glyphicon glyphicon-plus";
+    btnAdd.className += " btn btn-primary glyphicon glyphicon-plus";
     btnAdd.setAttribute("data-toggle", "tooltip");
     btnAdd.setAttribute("title", "Thêm một dòng trống sau dòng này");
     ctrlButtons.appendChild(btnAdd);
@@ -422,7 +422,7 @@ function controlButtons() {
 
     // Delete this line
     let btnDel = document.createElement("button");
-    btnDel.classList += "btn btn-danger glyphicon glyphicon-remove";
+    btnDel.className += " btn btn-danger glyphicon glyphicon-remove";
     btnDel.setAttribute("data-toggle", "tooltip");
     btnDel.setAttribute("title", "Xóa dòng này");
     ctrlButtons.appendChild(btnDel);
@@ -464,7 +464,7 @@ function metadataBanner(id, label, value, editable, onkeyuphandler) {
     val.setAttribute("id", id);
     if (editable) {
         val.setAttribute("contenteditable", editable);
-        val.classList += "text-info";
+        val.className += " text-info";
         val.onkeyup = onkeyuphandler;
     }
     return p;
@@ -646,7 +646,7 @@ $loader.find("#open-browser").click(function openWebStorage(ev) {
     if (nameOfStoredTests.length == 0) {
         let warn = document.createElement("p");
         $status.append(warn);
-        warn.classList += "text-danger";
+        warn.className += " text-danger";
         warn.innerText = "Không tìm thấy bài test nào.";
         return false;
     }
@@ -655,11 +655,11 @@ $loader.find("#open-browser").click(function openWebStorage(ev) {
     let form = document.createElement("form");
     $status.append(form);
     form.id = "choose-test";
-    form.classList += "form-inline";
+    form.className += " form-inline";
 
     let formGroupTestChooser = document.createElement("div");
     form.appendChild(formGroupTestChooser);
-    formGroupTestChooser.classList += "form-group";
+    formGroupTestChooser.className += " form-group";
 
     let lblTests = document.createElement("label");
     lblTests.setAttribute("for", "tests");
@@ -670,7 +670,7 @@ $loader.find("#open-browser").click(function openWebStorage(ev) {
     formGroupTestChooser.appendChild(tests);
     tests.required = true;
     tests.id = "tests";
-    tests.classList += "form-control";
+    tests.className += " form-control";
     nameOfStoredTests.forEach(key => {
         let option = document.createElement("option");
         option.innerText = key;
@@ -681,7 +681,7 @@ $loader.find("#open-browser").click(function openWebStorage(ev) {
     let btnChoose = document.createElement("button");
     form.appendChild(btnChoose);
     btnChoose.innerText = "Mở";
-    btnChoose.classList += "btn btn-primary";
+    btnChoose.className += " btn btn-primary";
     btnChoose.type = "submit";
 
     // Add handler when submit
@@ -702,7 +702,7 @@ $loader.find("#open-html").click(function openHTML(ev) {
     let form = document.createElement("form");
     $status.append(form);
     form.id = "html-chooser";
-    form.classList += "form-inline";
+    form.className += " form-inline";
 
     let div = document.createElement("div");
     form.appendChild(div);
@@ -718,12 +718,12 @@ $loader.find("#open-html").click(function openHTML(ev) {
     fc.type = "file";
     fc.id = "html-file-chooser";
     fc.accept = "text/html";
-    fc.classList += "form-control";
+    fc.className += " form-control";
 
     let btn = document.createElement("button");
     form.appendChild(btn);
     btn.type = "submit";
-    btn.classList += "btn btn-primary";
+    btn.className += " btn btn-primary";
     btn.innerText = "Mở";
 
     /* Redefinie behavior of form */
