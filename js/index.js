@@ -585,7 +585,7 @@ $saver.find("button#save-html").click(function saveHTML(ev) {
     link.href = "data:text/html," + encodeURIComponent(table.getHTMLPage().innerHTML);
     link.innerText = "đây";
     $status.addClass("text-success");
-    $status.html("<p>Đã lưu. Bạn có thể tải tại " + link.outerHTML + ".</p>");
+    $status.html("<p>Đã lưu thành file html. Bạn có thể tải tại " + link.outerHTML + ".</p>");
     return true;
 });
 // Doc
@@ -619,7 +619,7 @@ $saver.find("button#save-doc").click(function saveDoc(ev) {
     link.innerText = "đây";
     link.href = URL.createObjectURL(new Blob([html.outerHTML], { type: "text/html" }));
     $status.addClass("text-success");
-    $status.html("<p>Đã lưu. Bạn có thể tải tại " + link.outerHTML + ".</p>");
+    $status.html("<p>Đã lưu thành file doc. Bạn có thể tải tại " + link.outerHTML + ".</p>");
 });
 
 /* Test loader */
