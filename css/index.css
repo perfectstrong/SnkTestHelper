@@ -56,6 +56,16 @@ textarea {
     margin-top: 10px;
 }
 
+.panel-heading {
+    position: relative;
+}
+
+.panel-heading .btn-right {
+    position: absolute;
+    right: 15px; /* padding-righ(.panel-heading) */
+    bottom: 19px; /* padding-bottom(.panel-heading) + margin-bottom(h2) - padding-bottom(button) */
+}
+
 @media only screen and (max-width: 768px){
     .line {
         flex-direction: column;
