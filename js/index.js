@@ -205,21 +205,34 @@ class TableTest {
      * Initialize data from input text
      * 
      * @param {String} srctext including the title
+     * @param {Object} options other process options
+     * @param {Boolean} options.removeBlank automatically remove blank line
      * @memberof TableTest
      */
-    initFromText(srctext) {
+    initFromText(srctext, options) {
         let self = this;
         srctext.split(/\n/)
-            .forEach(linetext => self.push(new Line(linetext, "")));
+            .forEach(linetext => {
+                let newline = new Line(linetext, "");
+                if (options.removeBlank) {
+                    if (newline.src.trim() != "" || newline.dest.trim() != "") {
+                        self.push(newline);
+                    }
+                } else {
+                    self.push(newline);
+                }
+            });
     }
 
     /**
      * Initialize data from loaded json
      * 
      * @param {String} jsonstring a string in format of json
+     * @param {Object} options other process options
+     * @param {Boolean} options.removeBlank automatically remove blank line
      * @memberof TableTest
      */
-    initFromJSON(jsonstring) {
+    initFromJSON(jsonstring, options) {
         let json = JSON.parse(jsonstring);
         /* Set metadata */
         this.reset();
@@ -229,7 +242,14 @@ class TableTest {
         /* Set data */
         for (let index = 0; index < json.data.length; index++) {
             const storedLine = json.data[index];
-            this.push(new Line(storedLine.src, storedLine.dest));
+            let newline = new Line(storedLine.src, storedLine.dest);
+            if (options.removeBlank) {
+                if (newline.src.trim() != "" || newline.dest.trim() != "") {
+                    this.push(newline);
+                }
+            } else {
+                this.push(newline);
+            }
         }
     }
 
@@ -244,9 +264,11 @@ class TableTest {
      * the other is "destination".
      * 
      * @param {String} htmlstring
+     * @param {Object} options other process options
+     * @param {Boolean} options.removeBlank automatically remove blank line
      * @memberof TableTest
      */
-    initFromHTML(htmlstring) {
+    initFromHTML(htmlstring, options) {
         let parser = new DOMParser(),
             html = parser.parseFromString(htmlstring, "text/html");
         this.reset();
@@ -259,7 +281,14 @@ class TableTest {
         html.querySelectorAll("tr").forEach(tr => {
             let listtd = tr.querySelectorAll("td");
             if (listtd.length == 2) {
-                this.push(new Line(listtd.item(0).innerText, listtd.item(1).innerText));
+                let newline = new Line(listtd.item(0).innerText, listtd.item(1).innerText);
+                if (options.removeBlank) {
+                    if (newline.src.trim() != "" || newline.dest.trim() != "") {
+                        this.push(newline);
+                    }
+                } else {
+                    this.push(newline);
+                }
             }
         });
     }
@@ -535,13 +564,16 @@ $maker.find("form#input-text").submit(function initTableTest(ev) {
     $makerStatus.removeClass();
     $makerStatus.empty();
     // Get metatdata
+    table.reset();
     table.setTitle($this.find("input#title").val());
     table.setNickname($this.find("input#nickname").val());
     table.setAttempt($this.find("input#attempt").val());
     // Get the input text from form
     let srctext = $this.find("textarea#fulltext").val();
     // Init table's data
-    table.initFromText(srctext);
+    table.initFromText(srctext, {
+        removeBlank: $maker.find("#remove-blank-line").is(":checked")
+    });
     // Setup test content
     updateTestContent();
     // Announce success
@@ -709,7 +741,9 @@ $loader.find("#open-browser").click(function openWebStorage(ev) {
     form.onsubmit = function loadTest(ev) {
         ev.preventDefault();
         let chosenTestKey = this.querySelector("#tests").value;
-        table.initFromJSON(localStorage.getItem(chosenTestKey));
+        table.initFromJSON(localStorage.getItem(chosenTestKey), {
+            removeBlank: $loader.find("#remove-blank-line").is(":checked")
+        });
         updateTestContent();
         return false;
     };

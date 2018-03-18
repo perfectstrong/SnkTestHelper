@@ -50,7 +50,11 @@
                 Bạn có thể lưu trang web này về (ctrl+S) và mở ở chế độ offline. Mọi chức năng đều sẽ hoạt động bình thường.
             </p>
             <p>
-                Chương trình còn trong giai đoạn phát triển. Mọi ý kiến đóng góp hay vấn đề xuất hiện khi sử dụng webapp này, xin báo cáo trong group Sonako với cặp hashtag <em>#snktest #snktesthelper</em> hoặc gửi lên <a href="http://sonako.wikia.com/wiki/Message_Wall:Perfectstrong">tường của mình</a>. Vui lòng ghi rõ bạn sử dụng trình duyệt nào, phiên bản mấy, lỗi ở chức năng nào, các bước dẫn tới lỗi.
+                Chương trình còn trong giai đoạn phát triển. Mọi ý kiến đóng góp hay vấn đề xuất hiện khi sử dụng webapp này, xin báo cáo
+                trong group Sonako với cặp hashtag
+                <em>#snktest #snktesthelper</em> hoặc gửi lên
+                <a href="http://sonako.wikia.com/wiki/Message_Wall:Perfectstrong">tường của mình</a>. Vui lòng ghi rõ bạn sử dụng trình duyệt nào, phiên bản mấy, lỗi ở chức năng nào, các
+                bước dẫn tới lỗi.
             </p>
         </div>
 
@@ -106,10 +110,16 @@
                         <label for="fulltext">Văn bản nguồn:</label>
                         <textarea class="form-control" id="fulltext" rows="10" required></textarea>
                     </div>
+                    <div class="extra-param">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="remove-blank-line">Tự động xóa dòng trống.
+                            </label>
+                        </div>
+                    </div>
                     <button type="submit" class="btn btn-primary">Tạo test</button>
                 </form>
                 <div role="status">
-
                 </div>
             </div>
         </div>
@@ -215,6 +225,13 @@
                     <button class="btn btn-primary" id="open-html">Mở .html</button>
                     <!-- <button class="btn btn-primary" id="open-doc">Mở .doc</button> -->
                     <button class="btn btn-primary" id="open-browser">Mở từ trình duyệt</button>
+                </div>
+                <div class="extra-param">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" id="remove-blank-line">Tự động xóa dòng trống.
+                        </label>
+                    </div>
                 </div>
                 <div role="status"></div>
             </div>
