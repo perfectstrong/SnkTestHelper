@@ -6,6 +6,11 @@ textarea {
     resize: vertical;
 }
 
+line textarea {
+    min-height: 3em;
+    overflow-wrap: break-word;
+}
+
 .line {
     padding: 1em;
     margin: 1em 0;

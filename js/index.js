@@ -31,13 +31,14 @@ class Line {
 
         // Src
         let txtSrc = document.createElement("textarea");
-        txtSrc.setAttribute("rows", 3);
+        div.appendChild(txtSrc);
         txtSrc.value = this.src;
         txtSrc.className += " src form-control";
-        div.appendChild(txtSrc);
-        txtSrc.onkeyup = _ => {
+        autosize(txtSrc);
+        txtSrc.oninput = _ => {
             // Regularly update content
             this.src = txtSrc.value;
+            autosize.update(txtSrc);
         }
 
         // Control buttons
@@ -45,13 +46,14 @@ class Line {
 
         // Dest
         let txtDest = document.createElement("textarea");
-        txtDest.setAttribute("rows", 3);
+        div.appendChild(txtDest);
         txtDest.value = this.dest;
         txtDest.className += " dest form-control";
-        div.appendChild(txtDest);
-        txtDest.onkeyup = _ => {
+        autosize(txtDest);
+        txtDest.oninput = _ => {
             // Regularly update content
             this.dest = txtDest.value;
+            autosize.update(txtDest);
         }
 
         return div;
@@ -508,6 +510,9 @@ function updateTestContent() {
         (ev) => { table.metadata.title = ev.target.innerText }));
     /* Show the test table */
     $tabletest.replaceWith(table.getHTML());
+    // Resize the textarea
+    autosize.update(document.querySelectorAll(".src"));
+    autosize.update(document.querySelectorAll(".dest"));
     /* Announcement */
     $contentStatus.addClass("text-success");
     $contentStatus.html("Đã tạo bài test. Bạn có thể sửa trực tiếp các thông tin liên quan bài test (chữ màu lam nhạt).");
