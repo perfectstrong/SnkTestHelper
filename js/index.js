@@ -318,7 +318,7 @@ class TableTest {
         head.appendChild(style);
         style.innerText = "table {border-collapse: collapse;}"
             + "table, td, tr {border: solid 1px black}"
-            + "td {width: 50%}";
+            + "td {width: 50%; vertical-align: top}";
 
         // Set the body
         // Title
